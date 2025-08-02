@@ -28,9 +28,6 @@ A simple and secure JWT-based authentication system built with Ruby on Rails. Th
 ---
 
 ## 🚀 Setup
-
-### 1. Clone the Repo
-
 ```bash
 - Install Dependencies
     bundle install
