@@ -1,0 +1,173 @@
+
+openapi: 3.0.1
+info:
+  title: JWT Auth API
+  version: 'v1'
+  description: API documentation for JWT-based authentication
+
+servers:
+  - url: http://localhost:3000
+
+components:
+  securitySchemes:
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: |
+        🔐 Access Token (format: Bearer-<access_token>)
+
+    RefreshToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: |
+        🔁 Refresh Token (format: Bearer-<refresh_token>)
+
+paths:
+  /accounts/signup:
+    post:
+      summary: Create a new account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account:
+                  type: object
+                  properties:
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    email:
+                      type: string
+                    password:
+                      type: string
+                    password_confirmation:
+                      type: string
+      responses:
+        '201':
+          description: Account created
+
+  /accounts/login/user_login:
+    post:
+      summary: User login (email/password or Google)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - title: Email & Password Login
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      enum: [email_password]
+                    user_login:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                        password:
+                          type: string
+                      required: [email, password]
+                  required: [type, user_login]
+
+                - title: Google ID Token Login
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      enum: [google_with_id_token]
+                    user_login:
+                      type: object
+                      properties:
+                        google_id_token:
+                          type: string
+                      required: [google_id_token]
+                  required: [type, user_login]
+
+                - title: Google Access Token Login
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      enum: [google_with_access_token]
+                    user_login:
+                      type: object
+                      properties:
+                        google_access_token:
+                          type: string
+                      required: [google_access_token]
+                  required: [type, user_login]
+      responses:
+        '200':
+          description: ✅ Login successful. Returns `access_token` and `refresh_token`.
+        '401':
+          description: ❌ Invalid credentials or login type
+
+    
+  # /accounts/login/user_login:
+  #   post:
+  #     summary: User login (email/password or Google)
+  #     requestBody:
+  #       required: true
+  #       content:
+  #         application/json:
+  #           schema:
+  #             type: object
+  #             properties:
+  #               type:
+  #                 type: string
+  #                 enum: [email_password, google_with_id_token, google_with_access_token]
+  #                 example: email_password
+  #               user_login:
+  #                 type: object
+  #                 oneOf:
+  #                   - properties:
+  #                       email:
+  #                         type: string
+  #                       password:
+  #                         type: string
+  #                   - properties:
+  #                       google_id_token:
+  #                         type: string
+  #                   - properties:
+  #                       google_access_token:
+  #                         type: string
+  #     responses:
+  #       '200':
+  #         description: |
+  #           ✅ Login successful. Returns `access_token` and `refresh_token`.
+  #       '401':
+  #         description: ❌ Invalid credentials or login type
+
+  /accounts/login/refresh-token:
+    get:
+      summary: Refresh access token using refresh token
+      description: |
+        🔁 Requires `Authorization: Bearer-<refresh_token>`
+      security:
+        - RefreshToken: []
+      responses:
+        '200':
+          description: ✅ New access token returned
+        '401':
+          description: ❌ Invalid or expired refresh token
+
+  /dashboard:
+    get:
+      summary: Access protected dashboard
+      description: |
+        🔐 Requires `Authorization: Bearer-<access_token>`
+      security:
+        - AccessToken: []
+      responses:
+        '200':
+          description: ✅ Access granted
+        '401':
+          description: ❌ Unauthorized or missing access token

@@ -48,3 +48,5 @@ end
 gem 'jwt'
 gem 'bcrypt'
 gem 'dotenv-rails', groups: [:development, :test]
+gem 'rswag-ui'
+gem 'rswag-api'

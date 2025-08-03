@@ -109,7 +109,7 @@ GEM
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    jwt (3.1.2)
+    jwt (2.10.2)
       base64
     logger (1.7.0)
     loofah (2.24.1)
@@ -191,6 +191,12 @@ GEM
       psych (>= 4.0.0)
     reline (0.6.2)
       io-console (~> 0.5)
+    rswag-api (2.16.0)
+      activesupport (>= 5.2, < 8.1)
+      railties (>= 5.2, < 8.1)
+    rswag-ui (2.16.0)
+      actionpack (>= 5.2, < 8.1)
+      railties (>= 5.2, < 8.1)
     securerandom (0.4.1)
     sqlite3 (2.7.3-x64-mingw-ucrt)
     sqlite3 (2.7.3-x86_64-linux-gnu)
@@ -220,6 +226,8 @@ DEPENDENCIES
   jwt
   puma (>= 5.0)
   rails (~> 7.1.5, >= 7.1.5.1)
+  rswag-api
+  rswag-ui
   sqlite3 (>= 1.4)
   tzinfo-data
 
